@@ -9,8 +9,8 @@ from tensorlite import Tensor
 #                              Testing Forward Pass
 # ===================================================================================
 def test_tensor_plus_tensor():
-    a = Tensor(1.5)
-    b = Tensor(3.5)
+    a = Tensor(1.5, requires_grad=True)
+    b = Tensor(3.5, requires_grad=True)
 
     assert (a + b).data == pytest.approx(5.0)
 
@@ -28,43 +28,43 @@ def dummy_value():
 
 
 def test_tensor_plus_not_tensor(dummy_value):
-    a = Tensor(1.0)
+    a = Tensor(1.0, requires_grad=True)
     with pytest.raises(TypeError):
         a + dummy_value  # type: ignore
 
 
 def test_tensor_plus_float():
-    a = Tensor(1.0)
+    a = Tensor(1.0, requires_grad=True)
     assert (a + 1.0).data == pytest.approx(2.0)
     assert (2.0 + a).data == pytest.approx(3.0)
 
 
 def test_tensor_plus_int():
-    a = Tensor(1.0)
+    a = Tensor(1.0, requires_grad=True)
     assert (a + 1).data == pytest.approx(2.0)
     assert (2 + a).data == pytest.approx(3.0)
 
 
 def test_tensor_times_tensor():
-    a = Tensor(1.0)
-    b = Tensor(2.0)
+    a = Tensor(1.0, requires_grad=True)
+    b = Tensor(2.0, requires_grad=True)
     assert (a * b).data == pytest.approx(2.0)
 
 
 def test_tensor_times_not_tensor(dummy_value):
-    a = Tensor(1.0)
+    a = Tensor(1.0, requires_grad=True)
     with pytest.raises(TypeError):
         a * dummy_value  # type: ignore
 
 
 def test_tensor_times_float():
-    a = Tensor(2.0)
+    a = Tensor(2.0, requires_grad=True)
     assert (a * 1.0).data == pytest.approx(2.0)
     assert (2.0 * a).data == pytest.approx(4.0)
 
 
 def test_tensor_times_int():
-    a = Tensor(2.0)
+    a = Tensor(2.0, requires_grad=True)
     assert (a * 1).data == pytest.approx(2.0)
     assert (2 * a).data == pytest.approx(4.0)
 
@@ -73,16 +73,16 @@ def test_tensor_times_int():
 #                              Testing Backward Pass
 # ===================================================================================
 def test_backward_addition():
-    a = Tensor(1.0)
-    b = Tensor(1.0)
+    a = Tensor(1.0, requires_grad=True)
+    b = Tensor(1.0, requires_grad=True)
     c = a + b
     c.backward()
     assert a.grad == pytest.approx(1.0)
 
 
 def test_backward_multiple_addition():
-    a = Tensor(1.0)
-    b = Tensor(2.0)
+    a = Tensor(1.0, requires_grad=True)
+    b = Tensor(2.0, requires_grad=True)
     c = (a + b) + (a + b + b)
     c.backward()
     assert a.grad == pytest.approx(2.0)
@@ -90,8 +90,8 @@ def test_backward_multiple_addition():
 
 
 def test_backward_multiplication():
-    a = Tensor(1.0)
-    b = Tensor(2.0)
+    a = Tensor(1.0, requires_grad=True)
+    b = Tensor(2.0, requires_grad=True)
     c = a * b
     c.backward()
     assert a.grad == pytest.approx(2.0)
@@ -99,8 +99,8 @@ def test_backward_multiplication():
 
 
 def test_backward_complex_function():
-    x = [Tensor(3.0), Tensor(2.5)]
-    w = [Tensor(1.0), Tensor(3.5)]
+    x = [Tensor(3.0, requires_grad=True), Tensor(2.5, requires_grad=True)]
+    w = [Tensor(1.0, requires_grad=True), Tensor(3.5, requires_grad=True)]
     c = (x[0] * w[0]) + (x[1] * w[1])
     L = c * c
     L.backward()
